@@ -35,6 +35,17 @@
                 <p>Type</p>
                 <p>Width</p>
             </div>
+            <div class="runway-info-panel column is-one-fifth">
+                <div class="utctime">
+                    <p>Time</p>
+                </div>
+                <div class="RWY-in-use">
+                    <p>RWY in use</p>
+                </div>
+                <div class="condition">
+                    <p>Condition</p>
+                </div> 
+            </div>
         </div>
         <!-- WEST RWY here -->
         <div class="space"></div>
@@ -119,7 +130,7 @@ export default {
 .rcr {
     display: flex;
     flex-direction: column;
-   
+    width: 100%;
 }
 .topic {
     margin-bottom: 1em;

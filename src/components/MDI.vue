@@ -55,6 +55,11 @@ export default {
 
 <style scoped>
 /* Your component styles go here */
+.mdi{
+    display: flex;
+    flex-direction: column;
+    
+}
 .space {
     margin-left: 0.5em;
     margin-right: 0.5em;
