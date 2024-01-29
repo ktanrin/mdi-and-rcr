@@ -2,85 +2,211 @@
     <div class="container rcr">
         <p class="topic">Runway Surface Condition</p>
         <!-- EAST RWY here -->
-        <div class="container first-rwy columns is-full">
-            <div class="runway-info-panel column is-one-fifth">
+        <div class="container first-rwy columns">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
-                    <p>Time</p>
+                    <p> {{ parsedRCRData.EastRWY.Time}}</p>
                 </div>
-                <div class="RWY-in-use">
-                    <p>RWY in use</p>
+                <div class="RWY-in-use tag is-light is-success is-large" :class="{ 'is-danger': isEastClosed }">
+                    <p>21L</p>
                 </div>
                 <div class="condition">
-                    <p>Condition</p>
+                    <p>{{parsedRCRData.EastRWY.RWYCC}}</p>
                 </div> 
             </div>
-            <div class="first-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
-            </div>
-            <div class="second-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
-            </div>
-            <div class="third-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
-            </div>
-            <div class="runway-info-panel column is-one-fifth">
-                <div class="utctime">
-                    <p>Time</p>
+            <div class="first-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.EastRWY.typeTDZ === 'WET',
+            'bg-dark-blue': parsedRCRData.EastRWY.typeTDZ === 'STANDING WATER',
+            'bg-closed-red': isEastClosed
+            }"
+            >
+                <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column is-7">
+                    <div class="rwyccline">
+                        <p>{{parsedRCRData.EastRWY.rwyccTDZ}}</p>
+                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) }}</p>
+                    </div>
+                    <p>{{parsedRCRData.EastRWY.converageTDZ}}</p>
+                    <p>{{parsedRCRData.EastRWY.depthTDZ}}</p>
+                    <p>{{parsedRCRData.EastRWY.typeTDZ}}</p>  
+                    </div>
                 </div>
-                <div class="RWY-in-use">
-                    <p>RWY in use</p>
+            </div>
+            <div class="second-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.EastRWY.typeMID === 'WET',
+            'bg-dark-blue': parsedRCRData.EastRWY.typeMID === 'STANDING WATER',
+            'bg-closed-red': isEastClosed
+            }"
+            >
+                <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column is-7">
+                    <div class="rwyccline">
+                        <p>{{parsedRCRData.EastRWY.rwyccMID}}</p>
+                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) }}</p>
+                    </div>
+                    <p>{{parsedRCRData.EastRWY.converageMID}}</p>
+                    <p>{{parsedRCRData.EastRWY.depthMID}}</p>
+                    <p>{{parsedRCRData.EastRWY.typeMID}}</p>  
+                    </div>
+                </div>
+            </div>
+            <div class="third-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.EastRWY.typeEND === 'WET',
+            'bg-dark-blue': parsedRCRData.EastRWY.typeEND === 'STANDING WATER',
+            'bg-closed-red': isEastClosed
+            }"
+            >
+            <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column is-7">
+                    <div class="rwyccline">
+                        <p>{{parsedRCRData.EastRWY.rwyccEND}}</p>
+                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) }}</p>
+                    </div>
+                    <p>{{parsedRCRData.EastRWY.converageEND}}</p>
+                    <p>{{parsedRCRData.EastRWY.depthEND}}</p>
+                    <p>{{parsedRCRData.EastRWY.typeEND}}</p>  
+                    </div>
+                </div>
+            </div>
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
+                <div class="utctime">
+                    <p> {{ parsedRCRData.EastRWY.Time}}</p>
+                </div>
+                <div class="RWY-in-use tag is-light is-success is-large" :class="{ 'is-danger': isEastClosed }">
+                    <p>03R</p>
                 </div>
                 <div class="condition">
-                    <p>Condition</p>
+                    {{ formattedEastRWYCC }}
                 </div> 
             </div>
         </div>
         <!-- WEST RWY here -->
         <div class="space"></div>
         <div class="container second-rwy columns">
-            <div class="runway-info-panel column is-one-fifth">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
-                    <p>Time</p>
+                    <p>{{parsedRCRData.WestRWY.Time}}</p>
                 </div>
-                <div class="RWY-in-use">
-                    <p>RWY in use</p>
+                <div class="RWY-in-use tag is-light is-success is-large " :class="{ 'is-danger': isWestClosed }">
+                    <p>21R</p>
                 </div>
                 <div class="condition">
-                    <p>Condition</p>
+                    <p>{{ parsedRCRData.WestRWY.RWYCC }}</p>
                 </div> 
             </div>
-            <div class="first-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
+            <div class="first-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.WestRWY.typeTDZ === 'WET',
+            'bg-dark-blue': parsedRCRData.WestRWY.typeTDZ === 'STANDING WATER',
+            'bg-closed-red': isWestClosed
+            }"
+            >
+                <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column is-7">
+                        <div class="rwyccline">
+                            <p>{{parsedRCRData.WestRWY.rwyccTDZ}}</p>
+                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) }}</p>
+                        </div>
+                    <p>{{parsedRCRData.WestRWY.converageTDZ}}</p>
+                    <p>{{parsedRCRData.WestRWY.depthTDZ}}</p>
+                    <p>{{parsedRCRData.WestRWY.typeTDZ}}</p>  
+                    </div>
+                </div>
             </div>
-            <div class="second-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
+
+            <div class="second-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.WestRWY.typeMID === 'WET',
+            'bg-dark-blue': parsedRCRData.WestRWY.typeMID === 'STANDING WATER',
+            'bg-closed-red': isWestClosed
+            }"
+            >
+                <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column">
+                        <div class="rwyccline">
+                            <p>{{parsedRCRData.WestRWY.rwyccMID}}</p>
+                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) }}</p>
+                        </div>
+                    <p>{{parsedRCRData.WestRWY.converageMID}}</p>
+                    <p>{{parsedRCRData.WestRWY.depthMID}}</p>
+                    <p>{{parsedRCRData.WestRWY.typeMID}}</p>  
+                    </div>
+                </div>
             </div>
-            <div class="third-part column is-one-fifth">
-                <p>RWYCC</p>
-                <p>Converage</p>
-                <p>Depth</p>
-                <p>Type</p>
-                <p>Width</p>
+            <div class="third-part column is-3"
+            :class="{
+            'bg-light-blue': parsedRCRData.WestRWY.typeEND === 'WET',
+            'bg-dark-blue': parsedRCRData.WestRWY.typeEND === 'STANDING WATER',
+            'bg-closed-red': isWestClosed
+            }"
+            >
+                <div class="columns">
+                    <div class="textattribute column">
+                    <p>RWYCC</p>
+                    <p>Converage</p>
+                    <p>Depth</p>
+                    <p>Type</p>
+                    <p>Width</p>
+                    </div> 
+                    <div class="value column is-7">
+                        <div class="rwyccline">
+                            <p>{{parsedRCRData.WestRWY.rwyccEND}}</p>
+                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) }}</p>
+                        </div>
+                    <p>{{parsedRCRData.WestRWY.converageEND}}</p>
+                    <p>{{parsedRCRData.WestRWY.depthEND}}</p>
+                    <p>{{parsedRCRData.WestRWY.typeEND}}</p>  
+                    </div>
+                </div>
+            </div>
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.WestRWY && receivedData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
+                <div class="utctime">
+                    <p> {{ parsedRCRData.WestRWY.Time}}</p>
+                </div>
+                <div class="RWY-in-use tag is-light is-success is-large" :class="{ 'is-danger': isWestClosed }">
+                    <p>03L</p>
+                </div>
+                <div class="condition">
+                    {{ formattedWestRWYCC }}
+                </div> 
             </div>
         </div>
 
@@ -97,11 +223,46 @@ export default {
         return {
             // Your data goes here
             receivedData: {
-                rcrContent: 'No data received yet',
+            atisRWY:'21',
+            rcrContent: 'No data received yet',
             },
-            parsedRCRData: null,
+            parsedRCRData: {
+                EastRWY: {},
+                WestRWY: {}
+            },
         };
     },
+    computed: {
+    isEastClosed() {
+      return this.receivedData.atisRWY === '21R' || this.receivedData.atisRWY === '03L';
+    },
+    isWestClosed() {
+      return this.receivedData.atisRWY === '21L' || this.receivedData.atisRWY === '03R';
+    },
+    formattedEastRWYCC() {
+    const eastRWY = this.parsedRCRData.EastRWY;
+    if (!eastRWY || !eastRWY.RWYCC) {
+      return 'N/A';
+    }
+
+    const rwyccParts = eastRWY.RWYCC.split('/');
+    // Check if atisRWY is '03', '03L', or '03R'
+    const reverseOrder = ['03', '03L', '03R'].includes(this.receivedData.atisRWY);
+    return reverseOrder ? rwyccParts.reverse().join('/') : eastRWY.RWYCC;
+  },
+
+  formattedWestRWYCC() {
+    const westRWY = this.parsedRCRData.WestRWY;
+    if (!westRWY || !westRWY.RWYCC) {
+      return 'N/A';
+    }
+
+    const rwyccParts = westRWY.RWYCC.split('/');
+    // Check if atisRWY is '03', '03L', or '03R'
+    const reverseOrder = ['03', '03L', '03R'].includes(this.receivedData.atisRWY);
+    return reverseOrder ? rwyccParts.reverse().join('/') : westRWY.RWYCC;
+  },
+  },
     mounted() {
         // Connect to the Socket.IO server
         const socket = io('http://localhost:3000');
@@ -113,13 +274,125 @@ export default {
 
         socket.on('updateData', (data) => {
             this.receivedData = data;
+            if (data && data.rcrContent) {
+            this.parsedRCRData = this.processRCRData(data.rcrContent);
+            } else {
+            // Handle the case where data.rcrContent is null or undefined
+            this.parsedRCRData = {
+                EastRWY: {},
+                WestRWY: {},
+            };
+            }
+            
             console.log('Received data:', data);
             console.log('Received rcrContent:', data.rcrContent);
         });
     },
-    method() {
-
+    methods: {
+        processRCRData(rcrContent) {
+    if (!rcrContent) {
+      return { EastRWY: {}, WestRWY: {} };
     }
+
+    const lines = rcrContent.trim().split('\n');
+    const dataStructure = { EastRWY: {}, WestRWY: {} };
+
+    lines.forEach((line) => {
+      const parts = line.split(' ');
+      const timestamp = parts[0];
+      const runway = parts[1];
+      const rwycc = parts[2];
+      const coverage = parts[3];
+      const depth = parts[4];
+      const typeSection = parts.slice(5).join(' ');
+
+      const time = timestamp.substr(4, 4) + 'Z';
+      const isRunway21 = runway.includes('21');
+      const rwyccParts = rwycc.split('/');
+      const coverageParts = coverage.split('/');
+      const depthParts = depth.split('/');
+
+      const typeParts = this.extractTypeParts(typeSection);
+
+      const structuredData = {
+        Time: time,
+        RWYCC: rwycc,
+        rwyccTDZ: isRunway21 ? rwyccParts[0] : rwyccParts[2],
+        rwyccMID: rwyccParts[1],
+        rwyccEND: isRunway21 ? rwyccParts[2] : rwyccParts[0],
+        converageTDZ: isRunway21 ? this.formatCoverage(coverageParts[0]) : this.formatCoverage(coverageParts[2]),
+        converageMID: this.formatCoverage(coverageParts[1]),
+        converageEND: isRunway21 ? this.formatCoverage(coverageParts[2]): this.formatCoverage(coverageParts[0]),
+        depthTDZ: isRunway21 ? this.formatDepth(depthParts[0]) : this.formatDepth(depthParts[2]),
+        depthMID: this.formatDepth(depthParts[1]),
+        depthEND: isRunway21 ? this.formatDepth(depthParts[2]) : this.formatDepth(depthParts[0]),
+        typeTDZ: typeParts[0],
+        typeMID: typeParts[1],
+        typeEND: typeParts[2],
+        isRunway21,
+      };
+
+      if (runway === '21L' || runway === '03R') {
+        dataStructure.EastRWY = structuredData;
+      } else if (runway === '21R' || runway === '03L') {
+        dataStructure.WestRWY = structuredData;
+      }
+    });
+    console.log('dataStructure', dataStructure);
+    return dataStructure;
+  },
+
+  formatCoverage(value) {
+    return value !== 'NR' ? `${value}%` : value;
+  },
+
+  formatDepth(value) {
+    return value !== 'NR' ? `${value} mm` : value;
+  },
+
+  extractTypeParts(typeSection) {
+    // Split the type section by '/' and handle multi-word types like 'STANDING WATER'
+    //const knownMultiWordTypes = ['STANDING WATER'];
+    let typeParts = typeSection.split('/').map(part => part.trim());
+
+    // Handle known multi-word types
+    typeParts = typeParts.map((part, index, array) => {
+      if (part === 'STANDING' && array[index + 1] === 'WATER') {
+        return 'STANDING WATER';
+      }
+      if (part === 'WATER' && array[index - 1] === 'STANDING') {
+        return ''; // Already handled in the previous iteration
+      }
+      return part;
+    }).filter(part => part !== ''); // Remove empty strings from the array
+
+    // Ensure we have exactly 3 type parts
+    while (typeParts.length < 3) {
+      typeParts.push('N/A');
+    }
+
+    return typeParts;
+  },
+  // ... other methods ...
+  getRWYCCConditionText(rwycc) {
+    switch (rwycc) {
+      case '6':
+      case '5':
+        return 'GOOD';
+      case '4':
+        return 'GOOD TO MEDIUM';
+      case '3':
+        return 'MEDIUM (Slippery)';
+      case '2':
+        return 'MEDIUM TO POOR';
+      default:
+        return 'Unknown'; // Default case if the value is not recognized
+    }
+  },
+
+
+},
+
        
 };
 </script>
@@ -144,15 +417,51 @@ export default {
     border: solid 2px black;
     height: 100%;
     padding: 1em;
+    background-color: lightgrey;
     
 }
 .first-part, .second-part, .third-part {
-    border: solid 2px black;
+    border: none;
+    border-radius: 6px;
     padding: 0.5em;
     margin: 0.5em;
+    background-color: white;
+    
 }
+.utctime , .condition{
+    font-size: 1.25em !important;
+    font-weight: bold;
+    margin: 0.1em;
+}
+.RWY-in-use {
+    font-size: 1.75em !important;
+    font-weight: bold;
+}
+
+.bg-light-blue {
+    background-color: lightcyan; /* Pale light blue color */
+  }
+  .bg-dark-blue {
+    background-color: lightblue; /* Darker blue color */
+  }
+  .bg-closed-red{
+    background-color: rgb(254, 236, 240);
+  }
+
 .runway-info-panel {
     padding: 0.5em;
-    margin: 0.5em;
+    
+    text-align: center;
 }
+
+.rwyccline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+p {
+    font-weight: bold;
+}
+
 </style>

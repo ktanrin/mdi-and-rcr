@@ -1,8 +1,8 @@
 <template>
     <div class="container ws">
         <!-- Your content goes here -->
-        <button class="button is-primary">WS WRNG</button>
-        <input class="input" type="text" placeholder="WindShear Information">
+        <button class="button is-primary is-large">WS WRNG</button>
+        <input class="input is-large" type="text" placeholder="WindShear Information">
     </div>
 </template>
 
