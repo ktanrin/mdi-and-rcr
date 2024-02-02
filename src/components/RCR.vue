@@ -3,7 +3,7 @@
         <p class="topic">Runway Surface Condition</p>
         <!-- EAST RWY here -->
         <div class="container first-rwy columns">
-            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p> {{ parsedRCRData.EastRWY.Time}}</p>
                 </div>
@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p> {{ parsedRCRData.EastRWY.Time}}</p>
                 </div>
@@ -107,7 +107,7 @@
         <!-- WEST RWY here -->
         <div class="space"></div>
         <div class="container second-rwy columns">
-            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && receivedData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p>{{parsedRCRData.WestRWY.Time}}</p>
                 </div>
@@ -197,7 +197,7 @@
                     </div>
                 </div>
             </div>
-            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.WestRWY && receivedData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
+            <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.WestRWY && this.rcrData.atisRWY.includes('03')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p> {{ parsedRCRData.WestRWY.Time}}</p>
                 </div>
@@ -216,28 +216,55 @@
 
 
 <script>
-import io from 'socket.io-client';
+
 
 export default {
+    props: {
+        rcrData: {
+            type: Object,
+            required: true
+        }
+    },
     data() {
         return {
-            // Your data goes here
-            receivedData: {
-            atisRWY:'21',
-            rcrContent: 'No data received yet',
-            },
             parsedRCRData: {
                 EastRWY: {},
                 WestRWY: {}
             },
         };
     },
+    mounted() {
+        // Your component's logic goes here
+        console.log('rcrContent in rcr', this.rcrData.rcrContent);
+        console.log('atisRWY in rcr', this.rcrData.atisRWY);
+        // if (this.rcrData) {
+        // this.parsedRCRData = this.processRCRData(this.rcrData.rcrContent);
+        // console.log('parsedRCRData', this.parsedRCRData);
+        // } else {
+        //     // Reset or handle the absence of data appropriately
+        //     this.parsedRCRData = { EastRWY: {}, WestRWY: {} };
+        // }
+    },
+    watch: {
+        rcrData: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal) {
+            this.parsedRCRData = this.processRCRData(newVal.rcrContent);
+            console.log('parsedRCRData', this.parsedRCRData);
+                } else {
+                    // Reset or handle the absence of data appropriately
+                    this.parsedRCRData = { EastRWY: {}, WestRWY: {} };
+                }
+            }
+        }
+    },
     computed: {
     isEastClosed() {
-      return this.receivedData.atisRWY === '21R' || this.receivedData.atisRWY === '03L';
+      return this.rcrData.atisRWY === '21R' || this.rcrData.atisRWY === '03L';
     },
     isWestClosed() {
-      return this.receivedData.atisRWY === '21L' || this.receivedData.atisRWY === '03R';
+      return this.rcrData.atisRWY === '21L' || this.rcrData.atisRWY === '03R';
     },
     formattedEastRWYCC() {
     const eastRWY = this.parsedRCRData.EastRWY;
@@ -247,7 +274,7 @@ export default {
 
     const rwyccParts = eastRWY.RWYCC.split('/');
     // Check if atisRWY is '03', '03L', or '03R'
-    const reverseOrder = ['03', '03L', '03R'].includes(this.receivedData.atisRWY);
+    const reverseOrder = ['03', '03L', '03R'].includes(this.rcrData.atisRWY);
     return reverseOrder ? rwyccParts.reverse().join('/') : eastRWY.RWYCC;
   },
 
@@ -259,35 +286,11 @@ export default {
 
     const rwyccParts = westRWY.RWYCC.split('/');
     // Check if atisRWY is '03', '03L', or '03R'
-    const reverseOrder = ['03', '03L', '03R'].includes(this.receivedData.atisRWY);
+    const reverseOrder = ['03', '03L', '03R'].includes(this.rcrData.atisRWY);
     return reverseOrder ? rwyccParts.reverse().join('/') : westRWY.RWYCC;
   },
   },
-    mounted() {
-        // Connect to the Socket.IO server
-        const socket = io('http://localhost:3000');
-
-        // Handle events from the server
-        socket.on('connect', () => {
-            console.log('Connected to Socket.IO server');
-        });
-
-        socket.on('updateData', (data) => {
-            this.receivedData = data;
-            if (data && data.rcrContent) {
-            this.parsedRCRData = this.processRCRData(data.rcrContent);
-            } else {
-            // Handle the case where data.rcrContent is null or undefined
-            this.parsedRCRData = {
-                EastRWY: {},
-                WestRWY: {},
-            };
-            }
-            
-            console.log('Received data:', data);
-            console.log('Received rcrContent:', data.rcrContent);
-        });
-    },
+   
     methods: {
         processRCRData(rcrContent) {
     if (!rcrContent) {
