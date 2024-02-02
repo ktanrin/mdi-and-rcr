@@ -21,9 +21,14 @@ export default {
         }
     },
     watch: {
-        wsData: function(newVal){
-            this.wsText = newVal
-            console.log('WS Data from ws', newVal);
+        wsData(newVal, oldVal){
+            if(newVal !== null && oldVal === null){
+                console.log('WS Started');
+            }
+            else if(newVal === null && oldVal !== null){
+                console.log('WS Stopped');
+            }
+           
         }
     },
     mounted(){

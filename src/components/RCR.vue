@@ -251,7 +251,7 @@ export default {
             handler(newVal) {
                 if (newVal) {
             this.parsedRCRData = this.processRCRData(newVal.rcrContent);
-            console.log('parsedRCRData', this.parsedRCRData);
+            //console.log('parsedRCRData', this.parsedRCRData);
                 } else {
                     // Reset or handle the absence of data appropriately
                     this.parsedRCRData = { EastRWY: {}, WestRWY: {} };
@@ -448,7 +448,7 @@ export default {
     background-color: lightblue; /* Darker blue color */
   }
   .bg-closed-red{
-    background-color: rgb(254, 236, 240);
+    background-color: hsl(348, 86%, 61%);
   }
 
 .runway-info-panel {
