@@ -1,8 +1,14 @@
 <template>
     <div class="container ws">
         <!-- Your content goes here -->
-        <button class="button is-primary is-large">WS WRNG</button>
-        <input class="input is-large" type="text" placeholder="WindShear Information" :value="wsData" readonly >
+        <button class="button is-large is-primary"
+        :class="{
+              'is-warning': isFlashing && flashState === 'warning',
+              'is-danger': isFlashing && flashState === 'danger'
+        }"
+        >WS WRNG</button>
+        <input class="input is-large" type="text" placeholder="WindShear Information" :value="wsData" readonly
+        :class="{ 'is-danger is-focused': wsData }" >
     </div>
 </template>
 
@@ -17,23 +23,47 @@ export default {
     },
     data(){
         return {
-            wsText: ''
+            wsText: '',
+            isFlashing: false,
+            flashState: 'warning',
+            flashInterval: null
         }
     },
     watch: {
+        
         wsData(newVal, oldVal){
+            this.isFlashing = !!newVal;
+            if(this.isFlashing){
+              this.startFlashing();
+            }
+            else{
+              this.stopFlashing();
+            }
             if(newVal !== null && oldVal === null){
                 console.log('WS Started');
             }
             else if(newVal === null && oldVal !== null){
                 console.log('WS Stopped');
             }
-           
+        }
+    },
+    methods: {
+        startFlashing(){
+            this.flashInterval = setInterval(() => {
+                this.flashState = this.flashState === 'warning' ? 'danger' : 'warning';
+            }, 500);
+        },
+        stopFlashing(){
+            clearInterval(this.flashInterval);
+            this.flashState = 'primary';
         }
     },
     mounted(){
         this.wsText = this.wsData;
         //console.log('WS Data from ws', this.wsData);
+    },
+    beforeUnmount(){
+        this.stopFlashing();
     }
     // Your component's logic goes here
 }

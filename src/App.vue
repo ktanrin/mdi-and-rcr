@@ -39,10 +39,14 @@ export default {
     });
 
     this.socket.on('updateData', (data) => {
-      console.log('Data from server', data);
+      //console.log('Data from server', data);
       this.rcrData = data;
       this.wsData = data.atisWS;
-      this.mdiData = data.mdiContent;
+    });
+
+    this.socket.on('updateMdiData', (data) => {
+      console.log('MDI Data from server', data);
+      this.mdiData = data;
     });
 
     this.socket.on('disconnect', () => {

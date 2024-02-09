@@ -11,17 +11,14 @@
                     <th>Period</th>
                 </tr>
             </thead>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-        </table>
+            <tbody>
+                <tr v-for="index in 4" :key="`first-${index}`">
+                    <td>{{ firstHalf[index - 1]?.sector || '&nbsp;' }}</td>
+                    <td>{{ firstHalf[index - 1]?.time || '&nbsp;' }}</td>
+                    <td>{{ firstHalf[index - 1]?.period || '&nbsp;' }}</td>
+                </tr>
+        </tbody>
+      </table>
         <div class="space"></div>
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
             <thead>
@@ -31,29 +28,48 @@
                     <th>Period</th>
                 </tr>
             </thead>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-        </table>        
+            <tbody>
+                <tr v-for="index in 4" :key="`second-${index}`">
+                    <td>{{ secondHalf[index - 1]?.sector || '&nbsp;' }}</td>
+                    <td>{{ secondHalf[index - 1]?.time || '&nbsp;' }}</td>
+                    <td>{{ secondHalf[index - 1]?.period || '&nbsp;' }}</td>
+                </tr>
+            </tbody>
+        </table>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    
+    props: {
+        mdiData: {
+            type: Array,
+            default: () => []
+        }
+    },
+    computed: {
+    // Split the mdiData into two halves
+    firstHalf() {
+      return [...this.mdiData.slice(0, 4), {}, {}, {}, {}].slice(0, 4);
+    },
+    secondHalf() {
+      return [...this.mdiData.slice(4, 8), {}, {}, {}, {}].slice(0, 4);
+    }
+  },
+    mounted(){
+        console.log('MDI Data', this.mdiData);
+    }
     
 }
 </script>
 
 <style scoped>
+p {
+    
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
 /* Your component styles go here */
 .mdi{
     display: flex;
@@ -84,5 +100,12 @@ export default {
 .th,.tr,.td {
     text-align: center !important;
     align-items: center !important;
+    
+}
+.table td, .table th{
+    min-height: 50px !important;
+    line-height: 50px !important;
+    text-align: center !important;
+
 }
 </style>
