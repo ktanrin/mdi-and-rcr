@@ -1,8 +1,8 @@
 <template>
-    <div class="container rcr">
-        <p class="topic">Runway Surface Condition</p>
+    <div class="container rcr is-fluid">
+        <p class="topic" :style="{visibility:'hidden'}">Runway Surface Condition</p>
         <!-- EAST RWY here -->
-        <div class="container first-rwy columns">
+        <div class="container first-rwy columns is-fluid">
             <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p> {{ parsedRCRData.EastRWY.Time}}</p>
@@ -32,7 +32,10 @@
                     <div class="value column is-7">
                     <div class="rwyccline">
                         <p>{{parsedRCRData.EastRWY.rwyccTDZ}}</p>
-                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) }}</p>
+                        <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) !== 'Unknown'">
+                            {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) }}
+                        </p>
+                        
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageTDZ}}</p>
                     <p>{{parsedRCRData.EastRWY.depthTDZ}}</p>
@@ -58,7 +61,9 @@
                     <div class="value column is-7">
                     <div class="rwyccline">
                         <p>{{parsedRCRData.EastRWY.rwyccMID}}</p>
-                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) }}</p>
+                        <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) !== 'Unknown'">
+                            {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) }}
+                        </p>
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageMID}}</p>
                     <p>{{parsedRCRData.EastRWY.depthMID}}</p>
@@ -84,7 +89,8 @@
                     <div class="value column is-7">
                     <div class="rwyccline">
                         <p>{{parsedRCRData.EastRWY.rwyccEND}}</p>
-                        <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) }}</p>
+                        <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) !== 'Unknown'">
+                            {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) }}</p>
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageEND}}</p>
                     <p>{{parsedRCRData.EastRWY.depthEND}}</p>
@@ -106,7 +112,7 @@
         </div>
         <!-- WEST RWY here -->
         <div class="space"></div>
-        <div class="container second-rwy columns">
+        <div class="container second-rwy columns is-fluid">
             <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
                 <div class="utctime">
                     <p>{{parsedRCRData.WestRWY.Time}}</p>
@@ -136,7 +142,8 @@
                     <div class="value column is-7">
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccTDZ}}</p>
-                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) }}</p>
+                            <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) !== 'Unknown'">
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) }}</p>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageTDZ}}</p>
                     <p>{{parsedRCRData.WestRWY.depthTDZ}}</p>
@@ -163,7 +170,8 @@
                     <div class="value column">
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccMID}}</p>
-                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) }}</p>
+                            <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) !== 'Unknown'">
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) }}</p>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageMID}}</p>
                     <p>{{parsedRCRData.WestRWY.depthMID}}</p>
@@ -189,7 +197,8 @@
                     <div class="value column is-7">
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccEND}}</p>
-                            <p class="tag is-warning">{{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) }}</p>
+                            <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) !== 'Unknown'">
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) }}</p>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageEND}}</p>
                     <p>{{parsedRCRData.WestRWY.depthEND}}</p>
@@ -257,7 +266,8 @@ export default {
                     this.parsedRCRData = { EastRWY: {}, WestRWY: {} };
                 }
             }
-        }
+        },
+        
     },
     computed: {
     isEastClosed() {
@@ -421,6 +431,7 @@ export default {
     height: 100%;
     padding: 1em;
     background-color: lightgrey;
+    align-items: center;
     
 }
 .first-part, .second-part, .third-part {

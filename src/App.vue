@@ -1,9 +1,9 @@
 <template>
-  
+  <div id="app" class="container is-fluid">
     <RCR :rcr-data="rcrData"></RCR>
     <WS :ws-data="wsData"></WS>
     <MDI :mdi-data="mdiData"></MDI>
-  
+  </div>
 </template>
 
 <script>
@@ -27,7 +27,7 @@ export default {
         atisRWY: '21'
       },
       wsData: '',
-      mdiData: {},
+      mdiData: [],
     };
   },
   mounted(){
@@ -46,7 +46,14 @@ export default {
 
     this.socket.on('updateMdiData', (data) => {
       console.log('MDI Data from server', data);
-      this.mdiData = data;
+      
+      this.mdiData = Object.values(data).map((item) => {
+        return {
+          sector: item.sector,
+          time: item.time,
+          period: item.period
+        }
+      });
     });
 
     this.socket.on('disconnect', () => {
@@ -57,6 +64,7 @@ export default {
     if (this.socket) {
       this.socket.off('connect')
       this.socket.off('updateData')
+      this.socket.off('updateMdiData')
       this.socket.off('disconnect')
     }
   }

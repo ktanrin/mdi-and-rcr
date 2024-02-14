@@ -1,7 +1,7 @@
 <template>
-    <div class="container ws">
+    <div class="container ws is-fluid">
         <!-- Your content goes here -->
-        <button class="button is-large is-primary"
+        <button class="button is-large is-info"
         :class="{
               'is-warning': isFlashing && flashState === 'warning',
               'is-danger': isFlashing && flashState === 'danger'
@@ -72,7 +72,7 @@ export default {
 <style scoped>
 .ws {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
 }
@@ -81,5 +81,6 @@ export default {
     font-weight: bold;
     color: salmon;
 }
+
 /* Your component's styles go here */
 </style>
