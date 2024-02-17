@@ -79,6 +79,9 @@ export default {
 .button, .input {
     margin-right: 10px;
     font-weight: bold;
+    
+}
+.input {
     color: salmon;
 }
 
