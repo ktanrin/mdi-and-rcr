@@ -1,9 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const fs = require('fs')
+const path = require('path')
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -19,8 +21,9 @@ async function createWindow() {
       
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
 
@@ -79,3 +82,19 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.handle('load-audio', async (event, fileName) => {
+  // Construct the path to the audio file
+  const filePath = path.join(app.getAppPath(), fileName);
+ 
+  try {
+    // Read the file as a buffer
+    const audioBuffer = fs.readFileSync(filePath);
+    // Return the buffer data
+    return audioBuffer;
+  } catch (error) {
+    console.error('Error loading audio file:', error);
+    throw error; // Propagate the error back to the renderer process
+  }
+ });
+

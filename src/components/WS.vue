@@ -40,9 +40,11 @@ export default {
               this.stopFlashing();
             }
             if(newVal !== null && oldVal === null){
+                this.playWSStart();
                 console.log('WS Started');
             }
             else if(newVal === null && oldVal !== null){
+                this.playWSStop();
                 console.log('WS Stopped');
             }
         }
@@ -56,6 +58,42 @@ export default {
         stopFlashing(){
             clearInterval(this.flashInterval);
             this.flashState = 'primary';
+        },
+        playAudio(src){
+            const audio = new Audio(src);
+            audio.play().catch(err => {
+                console.error('Error playing audio', err);
+            });
+        },
+        async playWSStart(){
+            let audioSrc;
+            if(process.env.NODE_ENV === 'development'){
+                audioSrc = 'WsWrngStart.wav';
+                this.playAudio(audioSrc);
+            }
+            else{
+                const audioData = await window.electron.loadAudio('WsWrngStart.wav');
+                if(audioData){
+                    const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+                    audioSrc = URL.createObjectURL(audioBlob);
+                    this.playAudio(audioSrc);
+                }
+            }
+        },
+        async playWSStop(){
+            let audioSrc;
+            if(process.env.NODE_ENV === 'development'){
+                audioSrc = 'WsWrngStop.wav';
+                this.playAudio(audioSrc);
+            }
+            else{
+                const audioData = await window.electron.loadAudio('WsWrngStop.wav');
+                if(audioData){
+                    const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+                    audioSrc = URL.createObjectURL(audioBlob);
+                    this.playAudio(audioSrc);
+                }
+            }
         }
     },
     mounted(){

@@ -167,7 +167,7 @@
                     <p>Type</p>
                     <p>Width</p>
                     </div> 
-                    <div class="value column">
+                    <div class="value column is-7">
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccMID}}</p>
                             <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) !== 'Unknown'">
@@ -265,6 +265,12 @@ export default {
                     // Reset or handle the absence of data appropriately
                     this.parsedRCRData = { EastRWY: {}, WestRWY: {} };
                 }
+            }
+        },
+        parsedRCRData: {
+            deep: true,
+            handler(newVal, oldVal) {
+                this.checkForRWYCCChange(newVal, oldVal);
             }
         },
         
@@ -402,6 +408,119 @@ export default {
         return 'Unknown'; // Default case if the value is not recognized
     }
   },
+
+  playAudio(src) {
+    const audio = new Audio(src);
+    audio.play().catch(err => {
+      console.error('Error playing audio', err);
+    });
+  },
+  async playRWYCCChangedSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'RWY Condition Code Changed.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('RWY Condition Code Changed.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+  async playRWYCCResumeNormalSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'RWY Condition Code Resume Normal.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('RWY Condition Resume Normal.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+  async playRWYSlipperyWetSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'RWY Slippery Wet.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('RWY Slippery Wet.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+  async playRWYWetSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'RWY Wet.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('RWY Wet.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+  async playSlushOnRWYSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'Slush on RWY.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('Slush on RWY.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+  async playStandingWaterOnRWYSound(){
+    let audioSrc;
+    if(process.env.NODE_ENV === 'development'){
+      audioSrc = 'Standing Water on RWY.wav';
+      this.playAudio(audioSrc);
+    } else {
+      const audioData = await window.electon.loadAudio('Standing Water on RWY.wav');
+      if(audioData){
+        const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
+        audioSrc = URL.createObjectURL(audioBlob);
+        this.playAudio(audioSrc);
+        }
+    }
+  },
+
+  checkForRWYCCChange(newValue, oldValue) {
+    let soundPlayed = false; // Flag to prevent playing the sound multiple times
+    const runways = ['EastRWY', 'WestRWY'];
+    for (const runwayKey of runways) {
+            const segments = ['rwyccTDZ', 'rwyccMID', 'rwyccEND'];
+            for (const segment of segments) {
+                const newSegmentValue = newValue[runwayKey]?.[segment];
+                const oldSegmentValue = oldValue[runwayKey]?.[segment];
+                
+                // Detect change from "6" to another value and ensure sound is played only once
+                if (oldSegmentValue === '6' && newSegmentValue && newSegmentValue !== '6' && !soundPlayed) {
+                    this.playRWYCCChangedSound();
+                    soundPlayed = true; // Prevent further sound playback this cycle
+                    break; // Optional: exit the segment loop early if sound playback is needed only once
+                }
+            }
+            if (soundPlayed) {
+                break; // Exit the runway loop early if sound playback is needed only once
+            }
+        }
+    },
 
 
 },

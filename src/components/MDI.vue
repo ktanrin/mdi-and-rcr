@@ -12,7 +12,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="index in 4" :key="`first-${index}`" :class="{ 'is-selected': isCurrentTimeInPeriod(firstHalf[index - 1]?.period) }">
+                <tr v-for="index in 4" :key="`first-${index}`" :class="{ 'is-selected': firstHalfSelectionStates[index - 1] }">
                     <td>{{ firstHalf[index - 1]?.sector || '&nbsp;' }}</td>
                     <td>{{ firstHalf[index - 1]?.time || '&nbsp;' }}</td>
                     <td>{{ firstHalf[index - 1]?.period || '&nbsp;' }}</td>
@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="index in 4" :key="`second-${index}`" :class="{ 'is-selected': isCurrentTimeInPeriod(secondHalf[index - 1]?.period) }">
+                <tr v-for="index in 4" :key="`second-${index}`" :class="{ 'is-selected': secondHalfSelectionStates[index - 1] }">
                     <td>{{ secondHalf[index - 1]?.sector || '&nbsp;' }}</td>
                     <td>{{ secondHalf[index - 1]?.time || '&nbsp;' }}</td>
                     <td>{{ secondHalf[index - 1]?.period || '&nbsp;' }}</td>
@@ -51,7 +51,11 @@ export default {
     data(){
         return {
             // Your component data goes here
-            isCurrentlySelected: false,
+            // Other data properties...
+            firstHalfSelectionStates: new Array(4).fill(false),
+            secondHalfSelectionStates: new Array(4).fill(false),
+            soundPlayedFlag: {},
+
         };
     },
     computed: {
@@ -61,26 +65,83 @@ export default {
     },
     secondHalf() {
       return [...this.mdiData.slice(4, 8), {}, {}, {}, {}].slice(0, 4);
-    }
+    },
+    
   },
     mounted(){
-        
-        this.checkPeriod(); // Initial check
-        this.interval = setInterval(() => {
-        this.checkPeriod(); // Periodic check every minute (or another suitable interval)
+        this.initializeFlags();
+        this.updateSelectionStates(); // Initial check
+        this.checkMDI(); // Initial check
+        this.selectStateInterval = setInterval(() => {
+            this.updateSelectionStates();
+        }, 1000); // Check every 1 second
+
+        // New interval for checking MDI start/stop every minute
+        this.checkMDIInterval = setInterval(() => {
+            this.checkMDI();
         }, 1000); // Check every 60 seconds
+
     },
     beforeUnmount() { // Use beforeDestroy() for Vue 2
-        clearInterval(this.interval); // Clear the interval to prevent memory leaks
+        clearInterval(this.checkPeriodInterval);
+        clearInterval(this.checkMDIInterval); // Clear the interval to prevent memory leaks
     },
-
+    
     methods: {
-
-    checkPeriod() {
-      // Check if the current time is within any of the periods
-      this.isCurrentlySelected = this.mdiData.some(item => this.isCurrentTimeInPeriod(item.period));
+    initializeFlags() {
+        this.soundPlayedFlag = {};
+        this.mdiData.forEach((item, index) => {
+            this.soundPlayedFlag[`start-${index}`] = false;
+            this.soundPlayedFlag[`stop-${index}`] = false;
+        });
     },
+
+    updateSelectionStates() {
+        this.firstHalf.forEach((item, index) => {
+            this.firstHalfSelectionStates[index] = this.isCurrentTimeInPeriod(item?.period);
+        });
+        this.secondHalf.forEach((item, index) => {
+            this.secondHalfSelectionStates[index] = this.isCurrentTimeInPeriod(item?.period);
+        });
+    },    
+    checkMDI(){
+        // Play audio if the current time is within a period
+        const currentTime = this.getCurrentLocalTimeFormatted();
+        this.mdiData.forEach((item, index) => {
+            
+            const startTime = this.convertUTCToLocal(item.period.split('-')[0]);
+            let endTime = this.convertUTCToLocal(item.period.split('-')[1]);
+            
+            // Convert endTime to a Date object for manipulation
+            let endTimeDate = new Date();
+            endTimeDate.setHours(parseInt(endTime.substring(0, 2)), parseInt(endTime.substring(2, 4)), 0, 0);
+
+            // Add one minute to endTime
+            endTimeDate.setMinutes(endTimeDate.getMinutes() + 1);
+
+            // Convert back to a string in HHMM format
+            let adjustedEndTime = endTimeDate.getHours().toString().padStart(2, '0') + endTimeDate.getMinutes().toString().padStart(2, '0');
+
+            if(currentTime === startTime && !this.soundPlayedFlag[`start-${index}`]){
+                console.log('MDI Started');
+                this.playMDIStart();
+                this.soundPlayedFlag[`start-${index}`] = true;
+            }
+            if (currentTime === adjustedEndTime && !this.soundPlayedFlag[`stop-${index}`]) {
+                console.log('MDI Stopped');
+                this.playMDIStop();
+                this.soundPlayedFlag[`stop-${index}`] = true;
+            } else if (currentTime < startTime || currentTime > adjustedEndTime) {
+                // Reset flags when current time is outside the period
+                this.soundPlayedFlag[`start-${index}`] = false;
+                this.soundPlayedFlag[`stop-${index}`] = false;
+            }
+        })
+    },
+
+    
     isCurrentTimeInPeriod(period) {
+    
     if (!period) return false;
     // Convert period start and end times from UTC to local time
     const [startTime, endTime] = period.split('-').map(time => this.convertToMinutes(this.convertUTCToLocal(time)));
@@ -129,10 +190,48 @@ export default {
     const localTime = new Date(now.getTime() + (7 * 60 * 60 * 1000)); // Add 7 hours to UTC time
     const hours = String(localTime.getUTCHours()).padStart(2, '0');
     const minutes = String(localTime.getUTCMinutes()).padStart(2, '0');
-    console.log('Local Time', hours + minutes); 
+    //console.log('Local Time', hours + minutes); 
     return hours + minutes;
-  }
-    }
+  },
+    playAudio(src){
+        const audio = new Audio(src);
+        audio.play().catch(err => {
+            console.error('Error playing audio', err);
+        });
+    },
+    async playMDIStart(){
+        let audioSrc;
+        if(process.env.NODE_ENV === 'development'){
+            audioSrc = 'MDIStart.wav';
+            this.playAudio(audioSrc);
+        }
+        else{
+            const audioData = await window.electron.loadAudio('MDIStart.wav');
+            if(audioData){
+                const audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/wav' });
+                audioSrc = URL.createObjectURL(audioBlob);
+                this.playAudio(audioSrc);
+            }
+        }
+    },
+    async playMDIStop(){
+        let audioSrc;
+        if(process.env.NODE_ENV === 'development'){
+            audioSrc = 'MDIStop.wav';
+            this.playAudio(audioSrc);
+        }
+        else{
+            const audioData = await window.electron.loadAudio('MDIStop.wav');
+            if(audioData){
+                const audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/wav' });
+                audioSrc = URL.createObjectURL(audioBlob);
+                this.playAudio(audioSrc);
+            }
+        }
+    },
+    
+    
+}
     
 }
 </script>
