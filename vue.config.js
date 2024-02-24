@@ -8,15 +8,15 @@ module.exports = defineConfig({
         win: {
           icon: 'src/assets/icon.png'
         },
-        // asarUnpack: ['server-setup-dialog.html'],
-        // // This is where you can configure Electron Builder to package additional files
-        // extraFiles: [
-        //   {
-        //     // Assuming 'server-setup-dialog.html' is directly in the 'public' folder
-        //     from: 'public/server-setup-dialog.html',
-        //     to: 'server-setup-dialog.html', // Copies the file to the root of the packaged app
-        //   },
-        // ],
+        asarUnpack: ['server-setup-dialog.html'],
+        // This is where you can configure Electron Builder to package additional files
+        extraFiles: [
+          {
+            // Assuming 'server-setup-dialog.html' is directly in the 'public' folder
+            from: 'public/server-setup-dialog.html',
+            to: 'server-setup-dialog.html', // Copies the file to the root of the packaged app
+          },
+        ],
       },
     },
   },

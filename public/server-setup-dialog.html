@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address Setup</title>
+    <style>
+        body {
+            
+            font-family: Arial, sans-serif;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        input[type="text"] {
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Setup IP Addresses</h2>
+    <form id="ipForm">
+        <label for="arrivalIP">Arrival ATIS IP:</label>
+        <input type="text" id="arrivalIP" name="arrivalIP" required>
+        
+        <label for="departureIP">Departure ATIS IP:</label>
+        <input type="text" id="departureIP" name="departureIP" required>
+        
+        <button type="submit">Save</button>
+        
+    </form>
+
+    <script>
+        document.getElementById('ipForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const arrivalIP = document.getElementById('arrivalIP').value;
+            const departureIP = document.getElementById('departureIP').value;
+
+            const settings = {
+            arrivalATIS: arrivalIP,
+            departureATIS: departureIP,
+            };
+
+            // Example: Store in localStorage (for web)
+            // localStorage.setItem('arrivalIP', arrivalIP);
+            // localStorage.setItem('departureIP', departureIP);
+            window.electron.sendServerIp(settings); // use the exposed 'send' method
+            window.electron.requestCloseDialog();
+            window.close();
+            // Example: Send to Electron main process (for Electron)
+            // window.electronAPI.saveIPSettings({ arrivalIP, departureIP });
+
+            //alert('IP Addresses Saved!'); // Placeholder feedback
+        });
+
+         
+    </script>
+</body>
+</html>

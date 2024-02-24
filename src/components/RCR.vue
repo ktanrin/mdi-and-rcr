@@ -270,7 +270,10 @@ export default {
         parsedRCRData: {
             deep: true,
             handler(newVal, oldVal) {
+                this.checkForAllSix();
                 this.checkForRWYCCChange(newVal, oldVal);
+                this.checkForRWYWetorSlippery();
+                this.checkForRWYType();
             }
         },
         
@@ -421,7 +424,7 @@ export default {
       audioSrc = 'RWY Condition Code Changed.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('RWY Condition Code Changed.wav');
+      const audioData = await window.electron.loadAudio('RWY Condition Code Changed.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -432,10 +435,10 @@ export default {
   async playRWYCCResumeNormalSound(){
     let audioSrc;
     if(process.env.NODE_ENV === 'development'){
-      audioSrc = 'RWY Condition Code Resume Normal.wav';
+      audioSrc = 'RWY Condition Resume Normal.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('RWY Condition Resume Normal.wav');
+      const audioData = await window.electron.loadAudio('RWY Condition Resume Normal.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -449,7 +452,7 @@ export default {
       audioSrc = 'RWY Slippery Wet.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('RWY Slippery Wet.wav');
+      const audioData = await window.electron.loadAudio('RWY Slippery Wet.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -463,7 +466,7 @@ export default {
       audioSrc = 'RWY Wet.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('RWY Wet.wav');
+      const audioData = await window.electron.loadAudio('RWY Wet.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -477,7 +480,7 @@ export default {
       audioSrc = 'Slush on RWY.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('Slush on RWY.wav');
+      const audioData = await window.electron.loadAudio('Slush on RWY.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -488,10 +491,10 @@ export default {
   async playStandingWaterOnRWYSound(){
     let audioSrc;
     if(process.env.NODE_ENV === 'development'){
-      audioSrc = 'Standing Water on RWY.wav';
+      audioSrc = 'Standing water on RWY.wav';
       this.playAudio(audioSrc);
     } else {
-      const audioData = await window.electon.loadAudio('Standing Water on RWY.wav');
+      const audioData = await window.electron.loadAudio('Standing water on RWY.wav');
       if(audioData){
         const audioBlob = new Blob([new Uint8Array(audioData)], {type: 'audio/wav'});
         audioSrc = URL.createObjectURL(audioBlob);
@@ -515,11 +518,61 @@ export default {
                     soundPlayed = true; // Prevent further sound playback this cycle
                     break; // Optional: exit the segment loop early if sound playback is needed only once
                 }
+                
             }
             if (soundPlayed) {
                 break; // Exit the runway loop early if sound playback is needed only once
             }
         }
+    },
+
+    checkForRWYWetorSlippery(){
+      let soundPlayed = false; // Flag to prevent playing the sound multiple times
+        const runways = [this.parsedRCRData.EastRWY, this.parsedRCRData.WestRWY];
+        runways.forEach(runway => {
+            const segments = ['rwyccTDZ', 'rwyccMID', 'rwyccEND'];
+            segments.forEach(segment => {
+                if(runway[segment] === '3' && !soundPlayed){
+                    this.playRWYSlipperyWetSound();
+                    soundPlayed = true;
+                }
+                else if(runway[segment] === '5' && !soundPlayed){
+                    this.playRWYWetSound();
+                    soundPlayed = true;
+                }
+            });
+        });
+    },
+
+    checkForRWYType(){
+      let soundPlayed = false; // Flag to prevent playing the sound multiple times
+        const runways = [this.parsedRCRData.EastRWY, this.parsedRCRData.WestRWY];
+        runways.forEach(runway => {
+            const segments = ['typeTDZ', 'typeMID', 'typeEND'];
+            segments.forEach(segment => {
+                if(runway[segment] === 'SLUSH' && !soundPlayed){
+                    this.playSlushOnRWYSound();
+                    soundPlayed = true;
+                }
+                else if(runway[segment] === 'STANDING WATER' && !soundPlayed){
+                    this.playStandingWaterOnRWYSound();
+                    soundPlayed = true;
+                }
+            });
+        });
+    },
+
+
+    checkForAllSix(){
+       const runways = [this.parsedRCRData.EastRWY, this.parsedRCRData.WestRWY];
+       const allSegmentsSix = runways.every(runway => {
+            // Check if each runway segment (TDZ, MID, END) has RWYCC of "6"
+            return ['rwyccTDZ', 'rwyccMID', 'rwyccEND'].every(segment => runway[segment] === '6');
+        });
+       if(allSegmentsSix){
+           this.playRWYCCResumeNormalSound();
+           //console.log('All segments are 6');
+       }
     },
 
 
