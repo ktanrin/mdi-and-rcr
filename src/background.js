@@ -48,6 +48,9 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    //useContentSize: true,
+    //fullscreen: true,
+    setResizable: false,
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -57,7 +60,7 @@ async function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-
+mainWindow.maximize();
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)

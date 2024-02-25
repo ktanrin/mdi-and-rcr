@@ -35,12 +35,16 @@
                         <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) !== 'Unknown'">
                             {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccTDZ) }}
                         </p>
-                        
+                        <div class="arrow-up-down" >
+                        <font-awesome-icon v-if="arrowDirections.East.TDZ === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                        <font-awesome-icon v-if="arrowDirections.East.TDZ === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                        </div>
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageTDZ}}</p>
                     <p>{{parsedRCRData.EastRWY.depthTDZ}}</p>
                     <p>{{parsedRCRData.EastRWY.typeTDZ}}</p>  
                     </div>
+                    
                 </div>
             </div>
             <div class="second-part column is-3"
@@ -64,6 +68,10 @@
                         <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) !== 'Unknown'">
                             {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccMID) }}
                         </p>
+                        <div class="arrow-up-down" >
+                        <font-awesome-icon v-if="arrowDirections.East.MID === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                        <font-awesome-icon v-if="arrowDirections.East.MID === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                        </div>
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageMID}}</p>
                     <p>{{parsedRCRData.EastRWY.depthMID}}</p>
@@ -90,7 +98,12 @@
                     <div class="rwyccline">
                         <p>{{parsedRCRData.EastRWY.rwyccEND}}</p>
                         <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) !== 'Unknown'">
-                            {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) }}</p>
+                            {{ getRWYCCConditionText(parsedRCRData.EastRWY.rwyccEND) }}
+                        </p>
+                        <div class="arrow-up-down" >
+                        <font-awesome-icon v-if="arrowDirections.East.END === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                        <font-awesome-icon v-if="arrowDirections.East.END === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                        </div>
                     </div>
                     <p>{{parsedRCRData.EastRWY.converageEND}}</p>
                     <p>{{parsedRCRData.EastRWY.depthEND}}</p>
@@ -143,7 +156,12 @@
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccTDZ}}</p>
                             <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) !== 'Unknown'">
-                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) }}</p>
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccTDZ) }}
+                            </p>
+                            <div class="arrow-up-down" >
+                        <font-awesome-icon v-if="arrowDirections.West.TDZ === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                        <font-awesome-icon v-if="arrowDirections.West.TDZ === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                        </div>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageTDZ}}</p>
                     <p>{{parsedRCRData.WestRWY.depthTDZ}}</p>
@@ -171,7 +189,12 @@
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccMID}}</p>
                             <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) !== 'Unknown'">
-                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) }}</p>
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccMID) }}
+                            </p>
+                            <div class="arrow-up-down" >
+                            <font-awesome-icon v-if="arrowDirections.West.MID === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                            <font-awesome-icon v-if="arrowDirections.West.MID === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                            </div>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageMID}}</p>
                     <p>{{parsedRCRData.WestRWY.depthMID}}</p>
@@ -198,7 +221,12 @@
                         <div class="rwyccline">
                             <p>{{parsedRCRData.WestRWY.rwyccEND}}</p>
                             <p class="tag is-warning" v-if="getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) !== 'Unknown'">
-                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) }}</p>
+                                {{ getRWYCCConditionText(parsedRCRData.WestRWY.rwyccEND) }}
+                            </p>
+                            <div class="arrow-up-down" >
+                            <font-awesome-icon v-if="arrowDirections.West.END === 'up'" :icon="['fas', 'long-arrow-alt-up']" class="has-text-success fa-2x"/>
+                            <font-awesome-icon v-if="arrowDirections.West.END === 'down'" :icon="['fas', 'long-arrow-alt-down']" class="has-text-danger fa-2x" />
+                            </div>
                         </div>
                     <p>{{parsedRCRData.WestRWY.converageEND}}</p>
                     <p>{{parsedRCRData.WestRWY.depthEND}}</p>
@@ -225,9 +253,16 @@
 
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faArrowUpLong, faArrowDownLong, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+library.add(faArrowUpLong, faArrowDownLong, faLongArrowAltUp, faLongArrowAltDown);
 
 export default {
+    components: {
+      'font-awesome-icon': FontAwesomeIcon,
+    },
     props: {
         rcrData: {
             type: Object,
@@ -239,6 +274,18 @@ export default {
             parsedRCRData: {
                 EastRWY: {},
                 WestRWY: {}
+            },
+            arrowDirections: {
+              East: {
+                TDZ: '',
+                MID: '',
+                END: ''
+              },
+              West: {
+                TDZ: '',
+                MID: '',
+                END: ''
+              }
             },
         };
     },
@@ -275,6 +322,24 @@ export default {
                 this.checkForRWYWetorSlippery();
                 this.checkForRWYType();
             }
+        },
+        'parsedRCRData.EastRWY.rwyccTDZ': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'East', 'TDZ');
+        },
+        'parsedRCRData.EastRWY.rwyccMID': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'East', 'MID');
+        },
+        'parsedRCRData.EastRWY.rwyccEND': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'East', 'END');
+        },
+        'parsedRCRData.WestRWY.rwyccTDZ': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'West', 'TDZ');
+        },
+        'parsedRCRData.WestRWY.rwyccMID': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'West', 'MID');
+        },
+        'parsedRCRData.WestRWY.rwyccEND': function(newVal, oldVal) {
+          this.determineDirection(newVal, oldVal, 'West', 'END');
         },
         
     },
@@ -575,6 +640,25 @@ export default {
        }
     },
 
+    determineDirection(newVal, oldVal, runway, segment) {
+    let direction = '';
+    if (parseInt(newVal) > parseInt(oldVal)) {
+      direction = 'up';
+    } else if (parseInt(newVal) < parseInt(oldVal)) {
+      direction = 'down';
+    }
+
+    // Update the direction immediately
+    this.arrowDirections[runway][segment] = direction;
+
+    // Reset the direction after 10 seconds
+    if (direction) { // Only set a timeout if there's a change
+      setTimeout(() => {
+        this.arrowDirections[runway][segment] = '';
+      }, 10000); // 10000 milliseconds = 10 seconds
+    }
+  },
+
 
 },
 
@@ -585,6 +669,7 @@ export default {
 
 <style scoped>
 /* Your component styles go here */
+
 .rcr {
     display: flex;
     flex-direction: column;
@@ -641,9 +726,16 @@ export default {
 }
 
 .rwyccline {
+    position: relative !important;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.arrow-up-down {
+    position: absolute !important;
+    top: 125%;
+    right: 0;
+    
 }
 
 p {
