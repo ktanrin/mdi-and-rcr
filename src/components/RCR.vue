@@ -1,6 +1,6 @@
 <template>
     <div class="container rcr is-fluid">
-        <p class="topic" :style="{visibility:'hidden'}">Runway Surface Condition</p>
+        
         <!-- EAST RWY here -->
         <div class="container first-rwy columns is-fluid">
             <div class="runway-info-panel column" :style="{ visibility: (parsedRCRData.EastRWY && this.rcrData.atisRWY.includes('21')) ? 'visible' : 'hidden' }">
@@ -674,12 +674,13 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding-top: 1.2em;
 }
 .topic {
     margin-bottom: 1em;
 }
 .space {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
 .first-rwy, .second-rwy  {
     display: flex;
@@ -740,6 +741,12 @@ export default {
 
 p {
     font-weight: bold;
+    font-size: 1.5em;
+}
+.tag {
+    font-size: 1.2em;
+    font-weight: bold;
+    
 }
 
 </style>

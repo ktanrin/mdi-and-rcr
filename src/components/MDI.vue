@@ -291,4 +291,9 @@ p {
     font-weight: bold;
     font-size: 2em;
 }
+
+tr.is-selected {
+    background-color: rgb(180, 255, 230) !important;
+    color : #000000 !important; 
+}
 </style>

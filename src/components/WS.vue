@@ -120,7 +120,7 @@ export default {
     
 }
 .input {
-    color: salmon;
+    color: hsl(348, 100%, 61%);
 }
 
 /* Your component's styles go here */
