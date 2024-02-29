@@ -254,10 +254,10 @@
 
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowUpLong, faArrowDownLong, faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
+import {  faLongArrowAltUp, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faArrowUpLong, faArrowDownLong, faLongArrowAltUp, faLongArrowAltDown);
+library.add(faLongArrowAltUp, faLongArrowAltDown);
 
 export default {
     components: {

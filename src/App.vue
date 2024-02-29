@@ -90,7 +90,7 @@ export default {
         this.socket.disconnect();
       }
 
-    const socketUrl = `http://${this.ipMap[atisType]}:3000`;
+    const socketUrl = `http://${this.ipMap[atisType]}:1350`;
       
     // Establish a new connection
     this.socket = io(socketUrl);

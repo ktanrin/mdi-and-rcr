@@ -21,7 +21,7 @@ function readSettings() {
     }
   } catch (error) {
     console.log('Error reading settings file:', error);
-    return { arrivalATIS: 'localhost', departureATIS: 'localhost' }; // Return empty object if file doesn't exist or error occurs
+    return { arrivalATIS: '10.4.120.131', departureATIS: '10.4.120.132' }; // Return empty object if file doesn't exist or error occurs
   }
 }
 
