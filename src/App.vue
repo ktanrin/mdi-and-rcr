@@ -105,7 +105,7 @@ export default {
     });
 
     this.socket.on('updateData', (data) => {
-      //console.log('Data from server', data);
+      console.log('Data from server', data);
       this.rcrData = data;
       this.wsData = data.atisWS;
     });
@@ -146,6 +146,7 @@ export default {
   beforeUnmount(){
     if (this.socket) {
       this.socket.disconnect();
+
     }
   }
 
